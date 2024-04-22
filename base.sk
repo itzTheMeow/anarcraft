@@ -1,6 +1,6 @@
 command /prone:
-  permission: skript.home
-  description: prone
+  permission: anar.prone
+  description: Puts you into the crawl position.
   executable by: players
   trigger:
     if {prone_shulker::%uuid of player%} is set:
@@ -31,6 +31,6 @@ on leave:
   if {prone_shulker::%uuid of player%} is set:
     stopProne(player)
 
-on server stop:
+on skript stop:
   loop {prone_shulker::*}:
     kill {%loop-value%}
