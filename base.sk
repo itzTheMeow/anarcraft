@@ -1,0 +1,36 @@
+command /prone:
+  permission: skript.home
+  description: prone
+  executable by: players
+  trigger:
+    if {prone_shulker::%uuid of player%} is set:
+      stopProne(player)
+    else:
+      spawn shulker 1 block above player:
+        set name of entity to ""
+        set ai of entity to false
+        make entity invisible
+        make entity invulnerable
+      set {prone_shulker::%uuid of player%} to last spawned shulker
+
+function stopProne(plr: player):
+  # Teleport shulker away so you don't see the death particles.
+  teleport {prone_shulker::%uuid of {_plr}%} to location(0, 0, 0)
+  kill {prone_shulker::%uuid of {_plr}%}
+  delete {prone_shulker::%uuid of {_plr}%}
+
+on player move:
+  if {prone_shulker::%uuid of player%} is set: # Keep shulker right above player if prone.
+    teleport {prone_shulker::%uuid of player%} to block at location of player
+
+on player jump:
+  if {prone_shulker::%uuid of player%} is set:
+    stopProne(player)
+
+on leave:
+  if {prone_shulker::%uuid of player%} is set:
+    stopProne(player)
+
+on server stop:
+  loop {prone_shulker::*}:
+    kill {%loop-value%}
